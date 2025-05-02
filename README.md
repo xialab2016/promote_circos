@@ -37,10 +37,10 @@ We include the following patient-reported outcomes:
 
 ## How to Use
 
-1. Adjust the threshold slider to filter connections
-2. Hover over connections to see detailed information
-3. Download the visualization using the buttons at the bottom
-4. Share your current view using the "Generate Share Link" button
+- Adjust the threshold slider to filter connections
+- Hover over connections to see detailed information
+- Download the visualization using the buttons at the bottom
+- Share your current view using the "Generate Share Link" button
 
 ## View the Visualization
 
