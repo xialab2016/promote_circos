@@ -1,0 +1,352 @@
+
+  <!DOCTYPE html>
+  <html>
+  <head>
+    <title>Interactive Circos Plot</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://d3js.org/d3-chord.v3.min.js"></script>
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+      }
+      .tooltip {
+        position: absolute;
+        background-color: rgba(255, 255, 255, 0.9);
+        border: 1px solid #ddd;
+        padding: 20px;
+        border-radius: 4px;
+        pointer-events: none;
+        font-size: 14px;
+        z-index: 1000;
+      }
+      #circos-plot {
+        width: 1100px;
+        height: 900px;
+        margin: 0 auto;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .controls {
+        text-align: center;
+        margin: 20px 0;
+      }
+      .export-controls {
+        text-align: center;
+        margin: 30px 0 20px 0;
+      }
+      .btn {
+        background-color: #4CAF50;
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 4px;
+      }
+      .btn-secondary {
+        background-color: #2196F3;
+      }
+      .share-link {
+        display: none;
+        margin: 20px 0;
+        padding: 15px;
+        background-color: #f8f9fa;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+      h1 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 30px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Interactive Circos Plot for Score Overlaps</h1>
+    <div class="controls">
+      <label for="threshold">Minimum overlap threshold: </label>
+      <input type="range" id="threshold" min="0" max="1523" value="0" step="1">
+      <span id="threshold-value">0</span>
+    </div>
+    <div id="circos-plot" style="margin-top: 40px;"></div>
+    
+    <div class="export-controls">
+      <button id="exportSVG" class="btn">Download SVG</button>
+      <button id="exportPNG" class="btn">Download PNG</button>
+      <button id="generateShareLink" class="btn btn-secondary">Generate Share Link</button>
+    </div>
+    <div id="shareLink" class="share-link">
+      <p>Copy this link to share the visualization with current settings:</p>
+      <input type="text" id="shareLinkInput" style="width: 80%; padding: 8px;" readonly>
+      <button id="copyLink" class="btn" style="margin-left: 10px;">Copy</button>
+    </div>
+    
+    <script>
+    // Add FileSaver.js for downloading files
+    document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"><\/script>');
+    </script>
+    
+    <script>
+      // Parse the data
+      const data = {"matrix":[[0,1523,574,467,388,243,571,60,478,520,374,61,314,356,627,450,549,436,470,572,551,171,727,692,830],[1523,0,910,655,553,334,885,96,734,813,598,98,494,577,983,726,830,710,716,886,742,244,975,947,1108],[574,910,0,557,470,278,785,96,640,744,545,101,540,633,898,806,715,769,630,785,412,177,449,440,513],[467,655,557,0,477,274,705,78,574,657,462,80,369,405,705,470,660,460,570,705,300,151,323,319,372],[388,553,470,477,0,290,595,60,581,549,465,62,319,344,596,393,561,385,577,596,252,125,268,266,307],[243,334,278,274,290,0,346,39,344,316,259,39,174,191,346,222,338,221,338,346,131,74,157,159,179],[571,885,785,705,595,346,0,94,805,923,675,99,517,571,1001,658,909,650,791,1001,397,182,441,434,499],[60,96,96,78,60,39,94,0,87,91,72,119,82,87,97,83,92,79,85,94,65,34,66,64,70],[478,734,640,574,581,344,805,87,0,743,641,90,435,470,806,531,749,520,770,806,333,153,363,359,406],[520,813,744,657,549,316,923,91,743,0,622,96,496,548,923,629,834,620,729,923,372,172,410,406,465],[374,598,545,462,465,259,675,72,641,622,0,77,367,400,675,450,612,449,629,675,271,121,301,302,341],[61,98,101,80,62,39,99,119,90,96,77,0,87,92,102,88,95,84,87,99,68,35,69,67,73],[314,494,540,369,319,174,517,82,435,496,367,87,0,549,544,539,467,485,426,517,257,120,268,261,297],[356,577,633,405,344,191,571,87,470,548,400,92,549,0,638,580,519,535,462,571,289,129,295,296,329],[627,983,898,705,596,346,1001,97,806,923,675,102,544,638,0,711,909,696,792,1002,430,190,481,475,546],[450,726,806,470,393,222,658,83,531,629,450,88,539,580,711,0,600,764,525,658,347,149,386,374,433],[549,830,715,660,561,338,909,92,749,834,612,95,467,519,909,600,0,597,739,909,372,174,406,400,460],[436,710,769,460,385,221,650,79,520,620,449,84,485,535,696,764,597,0,516,650,344,145,379,367,426],[470,716,630,570,577,338,791,85,770,729,629,87,426,462,792,525,739,516,0,792,323,150,358,355,403],[572,886,785,705,596,346,1001,94,806,923,675,99,517,571,1002,658,909,650,792,0,397,182,441,434,499],[551,742,412,300,252,131,397,65,333,372,271,68,257,289,430,347,372,344,323,397,0,258,609,563,673],[171,244,177,151,125,74,182,34,153,172,121,35,120,129,190,149,174,145,150,182,258,0,206,185,221],[727,975,449,323,268,157,441,66,363,410,301,69,268,295,481,386,406,379,358,441,609,206,0,1168,1329],[692,947,440,319,266,159,434,64,359,406,302,67,261,296,475,374,400,367,355,434,563,185,1168,0,1275],[830,1108,513,372,307,179,499,70,406,465,341,73,297,329,546,433,460,426,403,499,673,221,1329,1275,0]],"categories":["PDDS","MSRSR","PROMIS - physical","BLCS","BWCS","IVIS","PES","MFIS-5","MFIS-21","PSQI","SSS","PSS","Leisure","Loneliness","MSSS","PROMIS - cognition","PDQ","PROMIS - depression","CESD","FAMS","EDSS","ARMSS","SDMT","T25W","9-HPT"]};
+      const matrix = data.matrix;
+      const categories = data.categories;
+      
+      // Set up dimensions
+      const width = 700;
+      const height = 700;
+      const outerRadius = Math.min(width, height) / 2 - 40;
+      const innerRadius = outerRadius - 30;
+      
+      // Color scales
+      const categoryColors = d3.scaleOrdinal()
+        .domain(categories)
+        .range(d3.schemeSet3);
+        
+      // Create SVG
+      const svg = d3.select("#circos-plot")
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .append("g")
+        .attr("transform", `translate(${width / 2},${height / 2})`);
+      
+      // Create tooltip
+      const tooltip = d3.select("body")
+        .append("div")
+        .attr("class", "tooltip")
+        .style("opacity", 0);
+        
+      // Function to update the visualization
+      function updateViz(threshold) {
+        // Clear previous visualization
+        svg.selectAll("*").remove();
+        
+        // Filter matrix based on threshold
+        const filteredMatrix = [];
+        for (let i = 0; i < matrix.length; i++) {
+          filteredMatrix[i] = [];
+          for (let j = 0; j < matrix[i].length; j++) {
+            filteredMatrix[i][j] = matrix[i][j] >= threshold ? matrix[i][j] : 0;
+          }
+        }
+        
+        // Create chord layout
+        const chord = d3.chord()
+          .padAngle(0.05)
+          .sortSubgroups(d3.descending);
+          
+        const chords = chord(filteredMatrix);
+        
+        // Arc generator
+        const arc = d3.arc()
+          .innerRadius(innerRadius)
+          .outerRadius(outerRadius);
+          
+        // Ribbon generator for chords
+        const ribbon = d3.ribbon()
+          .radius(innerRadius);
+          
+        // Add outer arcs
+        const group = svg.append("g")
+          .selectAll("g")
+          .data(chords.groups)
+          .join("g");
+          
+        group.append("path")
+          .attr("fill", d => categoryColors(categories[d.index]))
+          .attr("d", arc);
+          
+        // Add category labels
+        group.append("text")
+          .each(d => { d.angle = (d.startAngle + d.endAngle) / 2; })
+          .attr("dy", "0.35em")
+          .attr("transform", d => `
+            rotate(${(d.angle * 180 / Math.PI - 90)})
+            translate(${outerRadius + 10})
+            ${d.angle > Math.PI ? "rotate(180)" : ""}
+          `)
+          .attr("text-anchor", d => d.angle > Math.PI ? "end" : "start")
+          .text(d => categories[d.index])
+          .style("font-size", "12px");
+          
+        // Add chords/ribbons
+        svg.append("g")
+          .attr("fill-opacity", 0.7)
+          .selectAll("path")
+          .data(chords)
+          .join("path")
+          .attr("d", ribbon)
+          .attr("fill", d => categoryColors(categories[d.source.index]))
+          .attr("stroke", d => d3.rgb(categoryColors(categories[d.source.index])).darker())
+          .on("mouseover", function(event, d) {
+            // Highlight the chord
+            d3.select(this)
+              .attr("fill-opacity", 1);
+              
+            // Show tooltip
+            tooltip.transition()
+              .duration(200)
+              .style("opacity", 0.9);
+              
+            tooltip.html(`
+              <strong>${categories[d.source.index]} → ${categories[d.target.index]}</strong><br>
+              Overlap count: <strong>${Math.round(d.source.value)}</strong>
+            `)
+            .style("left", (event.pageX + 10) + "px")
+            .style("top", (event.pageY - 28) + "px");
+          })
+          .on("mouseout", function() {
+            // Reset chord opacity
+            d3.select(this)
+              .attr("fill-opacity", 0.7);
+              
+            // Hide tooltip
+            tooltip.transition()
+              .duration(500)
+              .style("opacity", 0);
+          });
+      }
+      
+      // Initialize with threshold 0
+      updateViz(0);
+      
+      // Update threshold on slider change
+      d3.select("#threshold").on("input", function() {
+        const threshold = +this.value;
+        d3.select("#threshold-value").text(threshold);
+        updateViz(threshold);
+      });
+      
+      // Export SVG function
+      d3.select("#exportSVG").on("click", function() {
+        // Get the SVG element
+        const svgData = document.querySelector("#circos-plot svg");
+        const serializer = new XMLSerializer();
+        let source = serializer.serializeToString(svgData);
+        
+        // Add name spaces
+        if (!source.match(/^<svg[^>]+xmlns="http\:\/\/www\.w3\.org\/2000\/svg"/)) {
+          source = source.replace(/^<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');
+        }
+        if (!source.match(/^<svg[^>]+"http\:\/\/www\.w3\.org\/1999\/xlink"/)) {
+          source = source.replace(/^<svg/, '<svg xmlns:xlink="http://www.w3.org/1999/xlink"');
+        }
+        
+        // Add XML declaration
+        source = '<?xml version="1.0" standalone="no"?>\r\n' + source;
+        
+        // Convert SVG source to URI data scheme
+        const url = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(source);
+        
+        // Create download link
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "circos_plot.svg";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      });
+      
+      // Export PNG function
+      d3.select("#exportPNG").on("click", function() {
+        const svgElement = document.querySelector("#circos-plot svg");
+        const serializer = new XMLSerializer();
+        let source = serializer.serializeToString(svgElement);
+        
+        // Add name spaces if missing
+        if (!source.match(/^<svg[^>]+xmlns="http\:\/\/www\.w3\.org\/2000\/svg"/)) {
+          source = source.replace(/^<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');
+        }
+        if (!source.match(/^<svg[^>]+"http\:\/\/www\.w3\.org\/1999\/xlink"/)) {
+          source = source.replace(/^<svg/, '<svg xmlns:xlink="http://www.w3.org/1999/xlink"');
+        }
+        
+        const canvas = document.createElement("canvas");
+        const context = canvas.getContext("2d");
+        
+        // Get SVG dimensions
+        const svgWidth = svgElement.width.baseVal.value;
+        const svgHeight = svgElement.height.baseVal.value;
+        
+        // Set canvas dimensions
+        canvas.width = svgWidth;
+        canvas.height = svgHeight;
+        
+        // Create an image to draw the SVG to canvas
+        const img = new Image();
+        img.src = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(source)));
+        
+        img.onload = function() {
+          // Draw white background and the SVG image
+          context.fillStyle = "white";
+          context.fillRect(0, 0, canvas.width, canvas.height);
+          context.drawImage(img, 0, 0);
+          
+          // Convert canvas to blob
+          canvas.toBlob(function(blob) {
+            // Save using FileSaver.js
+            saveAs(blob, "circos_plot.png");
+          });
+        };
+      });
+      
+      // Generate shareable link
+      d3.select("#generateShareLink").on("click", function() {
+        // Get current threshold value
+        const threshold = d3.select("#threshold").property("value");
+        
+        // Create URL with threshold parameter
+        const url = new URL(window.location.href);
+        url.searchParams.set("threshold", threshold);
+        
+        // Show the share link div
+        d3.select("#shareLink").style("display", "block");
+        
+        // Set the input value
+        d3.select("#shareLinkInput").property("value", url.toString());
+      });
+      
+      // Copy link to clipboard
+      d3.select("#copyLink").on("click", function() {
+        const input = document.getElementById("shareLinkInput");
+        input.select();
+        document.execCommand("copy");
+        
+        // Change button text temporarily to confirm copy
+        const button = this;
+        const originalText = button.textContent;
+        button.textContent = "Copied!";
+        
+        setTimeout(function() {
+          button.textContent = originalText;
+        }, 2000);
+      });
+      
+      // Check if URL has threshold parameter and apply it
+      window.addEventListener("load", function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const threshold = urlParams.get("threshold");
+        
+        if (threshold !== null) {
+          // Update slider value
+          d3.select("#threshold").property("value", threshold);
+          d3.select("#threshold-value").text(threshold);
+          
+          // Update visualization
+          updateViz(+threshold);
+        }
+      });
+    </script>
+  </body>
+  </html>
+  

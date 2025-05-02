@@ -1,0 +1,9 @@
+# R data files
+*.RData
+*.Rhistory
+*.rds
+
+# Temporary files
+temp_*.pdf
+*~
+.DS_Store
