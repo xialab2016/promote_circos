@@ -1,13 +1,39 @@
-# Interactive Circos Plot for Score Overlaps
+# Interactive circos plot that demonstrates overlap between patient-reported outcome scores
 
-This repository hosts an interactive visualization of score overlaps using a circos plot.
+This repository hosts an interactive visualization of patient-reported outcome score overlaps using a circos plot.
+
+We include the following patient-reported outcomes:
+
+Patient-determined disease steps (PDDS)
+Multiple sclerosis rating scale, revised (MSRS-R)
+PROMIS Physical Function
+Bladder Control Scale (BLCS)
+Bowel Control Scale (BWCS)
+Impact of Visual-Impairment (IVIS)
+Pain Effects Scale (PES)
+Modified Fatigue Impact Scale (MFIS)
+Pittsburgh Sleep Quality Index (PSQI)
+Sexual Satisfaction Scale (SSS)
+Perceived Stress Scale (PSS)
+Leisure
+Loneliness
+Multiple Sclerosis Severity Score (MSSS)
+PROMIS Cognition
+Perceived Deficits Questionnaire (PDQ)
+PROMIS Depression
+Center for Epidemiological Studies-Depression (CESD)
+Functional Assessment of Multiple Sclerosis (FAMS)
+Expanded Disability Status Scale (EDSS)
+Age-Related Multiple Sclerosis Severity (ARMSS)
+Symbol Digit Modality Test (SDMT)
+Timed 25ft Walk (T25W)
+9-hole Peg Test (9-HPT)
 
 ## Features
 
 - Interactive visualization of score overlaps between different measures
 - Adjustable threshold to filter connections
 - Download functionality (SVG and PNG formats)
-- Shareable links with specific threshold settings
 
 ## How to Use
 
@@ -18,4 +44,4 @@ This repository hosts an interactive visualization of score overlaps using a cir
 
 ## View the Visualization
 
-Visit https://[your-github-username].github.io/circos-plot/ to see the interactive visualization.
+Visit https://xialab2016.github.io/promote_circos/ to see the interactive visualization
