@@ -4,30 +4,30 @@ This repository hosts an interactive visualization of patient-reported outcome s
 
 We include the following patient-reported outcomes:
 
-Patient-determined disease steps (PDDS)
-Multiple sclerosis rating scale, revised (MSRS-R)
-PROMIS Physical Function
-Bladder Control Scale (BLCS)
-Bowel Control Scale (BWCS)
-Impact of Visual-Impairment (IVIS)
-Pain Effects Scale (PES)
-Modified Fatigue Impact Scale (MFIS)
-Pittsburgh Sleep Quality Index (PSQI)
-Sexual Satisfaction Scale (SSS)
-Perceived Stress Scale (PSS)
-Leisure
-Loneliness
-Multiple Sclerosis Severity Score (MSSS)
-PROMIS Cognition
-Perceived Deficits Questionnaire (PDQ)
-PROMIS Depression
-Center for Epidemiological Studies-Depression (CESD)
-Functional Assessment of Multiple Sclerosis (FAMS)
-Expanded Disability Status Scale (EDSS)
-Age-Related Multiple Sclerosis Severity (ARMSS)
-Symbol Digit Modality Test (SDMT)
-Timed 25ft Walk (T25W)
-9-hole Peg Test (9-HPT)
+Patient-determined disease steps (PDDS) <br />
+Multiple sclerosis rating scale, revised (MSRS-R) <br />
+PROMIS Physical Function <br />
+Bladder Control Scale (BLCS) <br />
+Bowel Control Scale (BWCS) <br />
+Impact of Visual-Impairment (IVIS) <br />
+Pain Effects Scale (PES) <br />
+Modified Fatigue Impact Scale (MFIS) <br />
+Pittsburgh Sleep Quality Index (PSQI) <br />
+Sexual Satisfaction Scale (SSS) <br />
+Perceived Stress Scale (PSS) <br />
+Leisure <br />
+Loneliness <br />
+Multiple Sclerosis Severity Score (MSSS) <br />
+PROMIS Cognition <br />
+Perceived Deficits Questionnaire (PDQ) <br />
+PROMIS Depression <br />
+Center for Epidemiological Studies-Depression (CESD) <br />
+Functional Assessment of Multiple Sclerosis (FAMS) <br />
+Expanded Disability Status Scale (EDSS) <br />
+Age-Related Multiple Sclerosis Severity (ARMSS) <br />
+Symbol Digit Modality Test (SDMT) <br />
+Timed 25ft Walk (T25W) <br />
+9-hole Peg Test (9-HPT) 
 
 ## Features
 
