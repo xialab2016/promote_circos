@@ -23,8 +23,8 @@
         z-index: 1000;
       }
       #circos-plot {
-        width: 1100px;
-        height: 900px;
+        width: 1500px;
+        height: 1200px;
         margin: 0 auto;
         position: relative;
         display: flex;
@@ -102,9 +102,9 @@
       const categories = data.categories;
       
       // Set up dimensions
-      const width = 700;
-      const height = 700;
-      const outerRadius = Math.min(width, height) / 2 - 40;
+      const width = 1100; // Increased width to accommodate labels
+      const height = 1000; // Increased height to accommodate labels
+      const outerRadius = Math.min(width, height) / 2 - 90; // Increased padding
       const innerRadius = outerRadius - 30;
       
       // Color scales
@@ -172,7 +172,7 @@
           .attr("dy", "0.35em")
           .attr("transform", d => `
             rotate(${(d.angle * 180 / Math.PI - 90)})
-            translate(${outerRadius + 10})
+            translate(${outerRadius + 50})
             ${d.angle > Math.PI ? "rotate(180)" : ""}
           `)
           .attr("text-anchor", d => d.angle > Math.PI ? "end" : "start")
